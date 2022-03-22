@@ -20,6 +20,7 @@ namespace ariel{
         if(column + length >= 100) {
             throw invalid_argument("illegal arguments!");
         }
+        return " ";
     }
 
     void Notebook::erase(unsigned int page, unsigned int row, unsigned int column, Direction direction, unsigned int length) {
