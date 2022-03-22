@@ -1,4 +1,5 @@
 #include <iostream>
+#include "Direction.hpp"
 using namespace std;
 using ariel::Direction;
 
