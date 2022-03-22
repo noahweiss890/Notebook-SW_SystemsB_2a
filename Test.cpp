@@ -20,23 +20,25 @@ TEST_CASE("Good input") {
     CHECK(notebook1.read(42, 47, 44, Direction::Vertical, 10) == "im writing");
     notebook1.erase(42, 46, 42, Direction::Horizontal, 10);
     CHECK(notebook1.read(42, 46, 42, Direction::Horizontal, 5) == "__~__" );
+
+    notebook1.write(5, 5, 5, Direction::Vertical, "_____");
+    CHECK(notebook1.read(5, 5, 5, Direction::Vertical, 5) == "_____");
+
+    notebook1.write(6, 6, 6, Direction::Horizontal, "      ");
+    CHECK(notebook1.read(6, 6, 6, Direction::Horizontal, 6) == "      ");
+
 }
 
 TEST_CASE("Bad input") {
     ariel::Notebook notebook2;
-    CHECK_THROWS(notebook2.read(-20, 40, 60, Direction::Horizontal, 10)); // negative page number
-    CHECK_THROWS(notebook2.read(70, -80, 60, Direction::Horizontal, 10)); // negative row number
-    CHECK_THROWS(notebook2.read(70, 80, 60, Direction::Horizontal, -20)); // negative length
-    CHECK_THROWS(notebook2.read(70, -80, 90, Direction::Horizontal, 30)); // column + length > 100
     CHECK_THROWS(notebook2.read(50, 40, 120, Direction::Horizontal, 10)); // column bigger than 100
-    CHECK_THROWS(notebook2.read(50, 40, -10, Direction::Horizontal, 10)); // column smaller than 0
+    CHECK_THROWS(notebook2.read(50, 40, 95, Direction::Horizontal, 10)); // column + length > 100
 
-    CHECK_THROWS(notebook2.erase(-20, 40, 60, Direction::Horizontal, 10)); // negative page number
-    CHECK_THROWS(notebook2.erase(70, -80, 60, Direction::Horizontal, 10)); // negative row number
-    CHECK_THROWS(notebook2.erase(70, 80, 60, Direction::Horizontal, -20)); // negative length
-    CHECK_THROWS(notebook2.erase(70, -80, 90, Direction::Horizontal, 30)); // column + length > 100
-    CHECK_THROWS(notebook2.erase(50, 40, 120, Direction::Horizontal, 10)); // column bigger than 100
-    CHECK_THROWS(notebook2.erase(50, 40, -10, Direction::Horizontal, 10)); // column smaller than 0
+    CHECK_THROWS(notebook2.write(5, 4, 120, Direction::Horizontal, "trying to write")); // column bigger than 100
+    CHECK_THROWS(notebook2.write(5, 4, 95, Direction::Horizontal, "wont work either")); // column + text length > 100
+
+    CHECK_THROWS(notebook2.erase(10, 10, 120, Direction::Horizontal, 10)); // column bigger than 100
+    CHECK_THROWS(notebook2.erase(10, 10, 95, Direction::Horizontal, 10)); // column + length > 100
 }
 
 TEST_CASE("Writing on erase") {
@@ -63,4 +65,16 @@ TEST_CASE("Writing on written space") {
 
     notebook4.write(50, 20, 20, Direction::Vertical, "this will be written");
     CHECK_THROWS(notebook4.write(50, 18, 25, Direction::Horizontal, "and this will try to overwrite it"));
+}
+
+TEST_CASE("Writing underscores") {
+    ariel::Notebook notebook5;
+
+    notebook5.write(6, 6, 6, Direction::Horizontal, "_____");
+    notebook5.write(6, 6, 6, Direction::Horizontal, "this should work");
+    CHECK(notebook5.read(6, 6, 11, Direction::Horizontal, 11) == "should work");
+
+    notebook5.write(10, 10, 10, Direction::Vertical, "_______");
+    notebook5.write(10, 8, 10, Direction::Vertical, "this too shall work");
+    CHECK(notebook5.read(10, 17, 10, Direction::Vertical, 10) == "shall work");
 }
