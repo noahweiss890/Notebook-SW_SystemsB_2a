@@ -14,14 +14,16 @@ namespace ariel{
     unordered_map<int, unordered_map<int, unordered_map<int, char>>> nbook;
 
     void Notebook::write(int page, int row, int column, Direction direction, string text) {
-        if(page < 0 || column < 0 || row < 0 || column + text.length() >= page_width) {
+        if(page < 0 || column < 0 || row < 0 || column + (int)text.length() >= page_width) {
             throw invalid_argument("illegal arguments!");
         }
-        for(int i = 0; i < text.length(); i++) {
-            if(text.at(i) < 33 || text.at(i) > 126) {
-                throw invalid_argument("illegal arguments!");
-            }
-        }
+        // for(int i = 0; i < text.length(); i++) {
+        //     if(text.at(i) < 33 || text.at(i) > 126) {
+        //         throw invalid_argument("illegal arguments!");
+        //     }
+        // }
+        text = " ";
+        this->bla = 1;
         
     }
 
@@ -30,12 +32,14 @@ namespace ariel{
             throw invalid_argument("illegal arguments!");
         }
         return " ";
+        this->bla = 1;
     }
 
     void Notebook::erase(int page, int row, int column, Direction direction, int length) {
         if(column + length >= page_width) {
             throw invalid_argument("illegal arguments!");
         }
+        this->bla = 1;
     }
 
     void Notebook::show(int page) {
