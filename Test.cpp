@@ -31,12 +31,24 @@ TEST_CASE("Good input") {
 
 TEST_CASE("Bad input") {
     ariel::Notebook notebook2;
-    CHECK_THROWS(notebook2.read(50, 40, 120, Direction::Horizontal, 10)); // column bigger than 100
-    CHECK_THROWS(notebook2.read(50, 40, 95, Direction::Horizontal, 10)); // column + length > 100
 
+    CHECK_THROWS(notebook2.read(-20, 40, 60, Direction::Horizontal, 10)); // negative page number
+    CHECK_THROWS(notebook2.read(70, -80, 60, Direction::Horizontal, 10)); // negative row number
+    CHECK_THROWS(notebook2.read(70, 80, 60, Direction::Horizontal, -20)); // negative length
+    CHECK_THROWS(notebook2.read(70, -80, 90, Direction::Horizontal, 30)); // column + length > 100
+    CHECK_THROWS(notebook2.read(50, 40, 120, Direction::Horizontal, 10)); // column bigger than 100
+    CHECK_THROWS(notebook2.read(50, 40, -10, Direction::Horizontal, 10)); // column smaller than 0
+
+    CHECK_THROWS(notebook2.erase(-20, 40, 60, Direction::Horizontal, 10)); // negative page number
+    CHECK_THROWS(notebook2.erase(70, -80, 60, Direction::Horizontal, 10)); // negative row number
+    CHECK_THROWS(notebook2.erase(70, 80, 60, Direction::Horizontal, -20)); // negative length
+    CHECK_THROWS(notebook2.erase(70, -80, 90, Direction::Horizontal, 30)); // column + length > 100
+    CHECK_THROWS(notebook2.erase(50, 40, 120, Direction::Horizontal, 10)); // column bigger than 100
+    CHECK_THROWS(notebook2.erase(50, 40, -10, Direction::Horizontal, 10)); // column smaller than 0
+
+    CHECK_THROWS(notebook2.read(50, 40, 95, Direction::Horizontal, 10)); // column + length > 100
     CHECK_THROWS(notebook2.write(5, 4, 120, Direction::Horizontal, "trying to write")); // column bigger than 100
     CHECK_THROWS(notebook2.write(5, 4, 95, Direction::Horizontal, "wont work either")); // column + text length > 100
-
     CHECK_THROWS(notebook2.erase(10, 10, 120, Direction::Horizontal, 10)); // column bigger than 100
     CHECK_THROWS(notebook2.erase(10, 10, 95, Direction::Horizontal, 10)); // column + length > 100
 }
